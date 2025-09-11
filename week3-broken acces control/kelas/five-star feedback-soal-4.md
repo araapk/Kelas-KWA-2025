@@ -12,21 +12,22 @@ Eksploitasi Broken Access Control untuk memberikan atau memanipulasi feedback ra
         ```
         https://juice-shop.herokuapp.com
         ```
-    2. Buka Burp Suite → aktifkan intercept → buka halaman View Basket.
-    3. Tangkap HTTP request untuk mendapatkan basket sendiri. Contoh URL request:
+    2. Tekan F12 → Sources → buka file `main.js` untuk melihat route aplikasi.
+    3. Temukan route untuk Admin Section:
         ```
-        http://juice-shop.herokuapp.com/rest/basket/1
+        /#/administration
         ```
-        Keterangan: (1 = basket ID milik user saat ini).
-
-    4. Modifikasi parameter `basket ID` dari `1` menjadi `2` atau ID lain yang dicurigai milik user lain.
-    5. Forward request yang sudah dimodifikasi.
-    6. Response menampilkan isi basket user lain → menandakan Broken Access Control.
+    4. Masukkan URL langsung di browser:
+        ```
+        https://juice-shop.herokuapp.com/#/administration
+        ```
+    5. Cari feedback/comments yang bintang 5 dan hapus commentsnya.
 
 - **Screenshot terminal/browser:**
+<img width="1920" height="1020" alt="Screenshot 2025-09-11 114600" src="https://github.com/user-attachments/assets/a053165b-41d1-40a7-a2f3-43afd3cff13e" />
 
 
 - **Catatan hasil percobaan:**
     1. **Hasil:** Berhasil.
-    2. **Alasan:** Server tidak melakukan validasi ownership basket secara benar, sehingga request dengan ID lain tetap diterima.
-    3. **Refleksi:** Challenge ini menegaskan pentingnya validasi server-side untuk setiap data sensitif, agar user hanya bisa mengakses data miliknya sendiri.
+    2. **Alasan:** Server tidak melakukan validasi kepemilikan produk atau hak akses user sebelum menerima feedback.
+    3. **Refleksi:** Challenge ini menegaskan pentingnya validasi server-side agar user hanya dapat memberikan feedback pada produk yang sah atau diperbolehkan.
