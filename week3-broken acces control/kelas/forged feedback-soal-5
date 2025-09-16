@@ -1,1 +1,34 @@
+# **5. Forged Feedbcak**
+
+## **5.1 [Soal]**
+Eksploitasi Broken Access Control untuk membuat atau memalsukan feedback seolah-olah berasal dari user lain (bukan akun kita sendiri), dengan cara memanipulasi parameter `UserId` pada request `POST` `/api/Feedbacks`.
+
+## **5.2 [Link resource untuk latihan]**
+`https://juice-shop.herokuapp.com/#/score-board?categories=Broken%20Access%20Control`
+
+## **5.3 [Jawaban + Bukti]**
+- **Step-by-step yang sudah dicoba:**
+    1. Login ke akun Juice Shop (user biasa).
+    2. Buka fitur Customer Feedback → isi form feedback.
+    3. Intercept request di Burp Suite untuk endpoint:
+        ```
+        POST /api/Feedbacks
+        ```
+    4. Modifikasi body request:
+        - Hapus field captchaId dan captcha (agar validasi CAPTCHA tidak terpanggil).
+        - Ganti nilai `UserId` dari milik sendiri (misalnya `3`) menjadi user lain (misalnya `1`).
+          Contoh payload:
+        ```
+
+        ```
+    5. Forward request ke server.
+    6. Buka halaman Administration untuk memverifikasi feedback tersebut tercatat atas nama user lain.
+
+- **Screenshot terminal/browser:**
+
+
+- **Catatan hasil percobaan:**
+    1. **Hasil:** Berhasil.
+    2. **Alasan:** Server tidak melakukan validasi kepemilikan `UserId` dan mempercayai input dari client.
+    3. **Refleksi:** Celah ini menunjukkan lemahnya kontrol akses di sisi server. Input sensitif seperti `UserId` tidak boleh diambil dari client, melainkan harus divalidasi berdasarkan session/token yang sah.
 
